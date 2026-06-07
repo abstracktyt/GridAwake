@@ -124,7 +124,22 @@ Write-Host "  Enter username and TOKEN when prompted" -ForegroundColor DarkGray
 Write-Host ""
 & git push -u origin main
 
-if ($LASTEXITCODE -eq 0) {
+$pushSuccess = ($LASTEXITCODE -eq 0)
+
+if (-not $pushSuccess) {
+    Write-Host ""
+    Write-Host "  Push was rejected or failed. This usually happens if the GitHub repo already has files (like README or .gitignore)." -ForegroundColor Yellow
+    Write-Host "  Would you like to FORCE PUSH (overwrite files on GitHub with local ones)? (y/n):" -ForegroundColor White
+    $forceChoice = Read-Host "  Answer"
+    if ($forceChoice -eq "y") {
+        Write-Host ""
+        Write-Host "  Force-pushing..." -ForegroundColor Yellow
+        & git push -f -u origin main
+        $pushSuccess = ($LASTEXITCODE -eq 0)
+    }
+}
+
+if ($pushSuccess) {
     Write-Host ""
     Write-Host "================================================" -ForegroundColor Green
     Write-Host "  SUCCESS! Code is now on GitHub!" -ForegroundColor Green
@@ -159,3 +174,4 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  git push -u origin main" -ForegroundColor DarkGray
     exit 1
 }
+
