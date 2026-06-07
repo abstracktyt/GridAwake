@@ -29,11 +29,12 @@ jobs:
       # 2. Выбираем Xcode (предпочитаем Xcode 16+)
       - name: 🔧  Select Xcode
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.0.app 2>/dev/null || \
-          sudo xcode-select -s /Applications/Xcode_16.app 2>/dev/null || \
+          sudo xcode-select -s /Applications/Xcode_16.2.app 2>/dev/null || \
+          sudo xcode-select -s /Applications/Xcode_16.1.app 2>/dev/null || \
           sudo xcode-select -s /Applications/Xcode.app
           echo "=== Xcode version ==="
           xcodebuild -version
+
 
 
       # 3. Устанавливаем XcodeGen (генератор .xcodeproj из project.yml)
