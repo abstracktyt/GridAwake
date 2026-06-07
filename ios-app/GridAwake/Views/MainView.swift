@@ -335,12 +335,21 @@ struct MainView: View {
 
     // MARK: ─── Footer ───────────────────────────────────────────────────────
 
+    private var appVersionString: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "v\(version) (\(build))"
+    }
+
     var footerNote: some View {
         VStack(spacing: 4) {
             Text(L10n.t("network_note"))
             Text(L10n.t("developer"))
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundColor(.secondary.opacity(0.7))
+            Text(appVersionString)
+                .font(.system(size: 10))
+                .foregroundColor(.secondary.opacity(0.5))
         }
         .font(.system(size: 12))
         .foregroundColor(.secondary)
