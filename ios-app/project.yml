@@ -62,7 +62,6 @@ targets:
 
     # Нужные фреймворки (Network для WoL, AVFoundation для QR-камеры)
     dependencies:
-      - framework: Network.framework
-        implicit: true
-      - framework: AVFoundation.framework
-        implicit: true
+      - sdk: Network.framework
+      - sdk: AVFoundation.framework
+
