@@ -122,6 +122,9 @@ struct MainView: View {
                 Divider().background(Color.gray.opacity(0.2))
                 menuRow(icon: "questionmark.circle.fill", key: "help") {
                     showMenu = false
+                    if let url = URL(string: "https://dsc.gg/gridawake") {
+                        UIApplication.shared.open(url)
+                    }
                 }
             }
             .background(
@@ -190,6 +193,8 @@ struct MainView: View {
                     Text(L10n.t("settings"))
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(isDark ? .white : .primary)
+                        .lineLimit(1)
+                        .layoutPriority(1)
                     Spacer()
                     onlineIndicator
                     Image(systemName: showSettingsPane ? "chevron.up" : "chevron.down")
@@ -245,6 +250,7 @@ struct MainView: View {
             Text(L10n.t(appState.isOnline ? "online" : "offline"))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(appState.isOnline ? .green : .red)
+                .lineLimit(1)
         }
     }
 
@@ -319,11 +325,16 @@ struct MainView: View {
     // MARK: ─── Footer ───────────────────────────────────────────────────────
 
     var footerNote: some View {
-        Text(L10n.t("network_note"))
-            .font(.system(size: 12))
-            .foregroundColor(.secondary)
-            .multilineTextAlignment(.center)
-            .padding(.top, 6)
+        VStack(spacing: 4) {
+            Text(L10n.t("network_note"))
+            Text(L10n.t("developer"))
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(.secondary.opacity(0.7))
+        }
+        .font(.system(size: 12))
+        .foregroundColor(.secondary)
+        .multilineTextAlignment(.center)
+        .padding(.top, 6)
     }
 
     // MARK: ─── Empty State ──────────────────────────────────────────────────

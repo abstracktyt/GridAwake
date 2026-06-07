@@ -7,7 +7,7 @@
 name: GridAwake
 
 options:
-  bundleIdPrefix: com.gridawake
+  bundleIdPrefix: com.abstrackt
   deploymentTarget:
     iOS: "16.0"
   xcodeVersion: "15.0"
@@ -36,11 +36,12 @@ targets:
     settings:
       base:
         PRODUCT_NAME: GridAwake
-        PRODUCT_BUNDLE_IDENTIFIER: com.gridawake.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.abstrackt.GridAwake
         SWIFT_VERSION: "5.9"
         IPHONEOS_DEPLOYMENT_TARGET: "16.0"
         ENABLE_BITCODE: "NO"
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 
         # ⚠️ Подпись отключена — для unsigned сборки через GitHub Actions
         # Для подписанной сборки (App Store) замените на:

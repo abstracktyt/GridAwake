@@ -37,6 +37,7 @@ enum L10n {
             "volume":          "Гучність",
 
             "network_note":    "ПК та iPhone мають бути в одній мережі",
+            "developer":       "Розробник: Abstrackt",
             "hold_hint":       "* Утримуйте кнопку для відкладеної дії",
             "wol_sent":        "Magic Packet відправлено ✓",
             "wol_fail":        "Помилка WoL — перевірте MAC адресу",
@@ -101,6 +102,7 @@ enum L10n {
             "volume":          "Громкость",
 
             "network_note":    "ПК и iPhone должны быть в одной сети",
+            "developer":       "Разработчик: Abstrackt",
             "hold_hint":       "* Удерживайте кнопку для отложенного действия",
             "wol_sent":        "Magic Packet отправлен ✓",
             "wol_fail":        "Ошибка WoL — проверьте MAC адрес",
@@ -165,6 +167,7 @@ enum L10n {
             "volume":          "Volume",
 
             "network_note":    "PC and iPhone must be on the same network",
+            "developer":       "Developer: Abstrackt",
             "hold_hint":       "* Hold button for delayed action",
             "wol_sent":        "Magic Packet sent ✓",
             "wol_fail":        "WoL error — check MAC address",
