@@ -35,6 +35,10 @@ targets:
       properties:
         UILaunchScreen:
           UIImageRespectsSafeAreaInsets: true
+        CFBundleURLTypes:
+          - CFBundleURLName: com.abstrackt.GridAwake
+            CFBundleURLSchemes:
+              - gridawake
 
     # Build settings
     settings:
