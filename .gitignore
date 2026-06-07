@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Xcode (генерируется автоматически через xcodegen)
+ios-app/*.xcodeproj
+ios-app/*.xcworkspace
+ios-app/DerivedData/
+ios-app/.build/
+ios-app/*.xcuserstate
+ios-app/xcuserdata/
+
+# macOS
+.DS_Store
+**/.DS_Store
+*.swp
+*.swo
+
+# Windows
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# GridAwake config (личные данные)
+.gridawake/
+
+# Test files
+pc-agent/test_check.py
+pc-agent/__pycache__/

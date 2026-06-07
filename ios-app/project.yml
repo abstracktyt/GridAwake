@@ -1,0 +1,68 @@
+# XcodeGen — конфигурация проекта GridAwake
+# Документация: https://github.com/yonaskolb/XcodeGen
+#
+# Этот файл заменяет .xcodeproj — генерируется автоматически через:
+#   xcodegen generate --spec project.yml
+
+name: GridAwake
+
+options:
+  bundleIdPrefix: com.gridawake
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true   # Models/, Views/, Services/ — в отдельных группах
+  groupSortPosition: top
+
+targets:
+  GridAwake:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+
+    # Все .swift файлы и Info.plist из папки GridAwake/
+    sources:
+      - path: GridAwake
+        excludes:
+          - "**/*.md"
+          - ".DS_Store"
+          - "**/.DS_Store"
+
+    # Используем наш существующий Info.plist
+    info:
+      path: GridAwake/Info.plist
+
+    # Build settings
+    settings:
+      base:
+        PRODUCT_NAME: GridAwake
+        PRODUCT_BUNDLE_IDENTIFIER: com.gridawake.app
+        SWIFT_VERSION: "5.9"
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        ENABLE_BITCODE: "NO"
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+
+        # ⚠️ Подпись отключена — для unsigned сборки через GitHub Actions
+        # Для подписанной сборки (App Store) замените на:
+        #   CODE_SIGN_STYLE: Automatic
+        #   DEVELOPMENT_TEAM: XXXXXXXXXX   (ваш Team ID)
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGNING_REQUIRED: "NO"
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGN_IDENTITY: ""
+
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+          DEBUG_INFORMATION_FORMAT: dwarf
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+          VALIDATE_PRODUCT: "YES"
+
+    # Нужные фреймворки (Network для WoL, AVFoundation для QR-камеры)
+    dependencies:
+      - framework: Network.framework
+        implicit: true
+      - framework: AVFoundation.framework
+        implicit: true

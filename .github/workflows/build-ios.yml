@@ -1,0 +1,127 @@
+name: 📱 GridAwake iOS — Build IPA
+
+# Запускается при:
+# - пуше в main/master ветку (если изменился ios-app/)
+# - вручную через GitHub Actions → Run workflow
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - "ios-app/**"
+      - ".github/workflows/build-ios.yml"
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:           # Ручной запуск кнопкой
+
+# ─────────────────────────────────────────────────────────────────────────────
+
+jobs:
+  build:
+    name: Build unsigned IPA
+    runs-on: macos-14          # Apple Silicon, Xcode 15+
+
+    steps:
+
+      # 1. Скачиваем код
+      - name: ⬇️  Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Выбираем Xcode (macos-14 имеет Xcode 15.x)
+      - name: 🔧  Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app 2>/dev/null || \
+          sudo xcode-select -s /Applications/Xcode.app
+          echo "=== Xcode version ==="
+          xcodebuild -version
+
+      # 3. Устанавливаем XcodeGen (генератор .xcodeproj из project.yml)
+      - name: 📦  Install XcodeGen
+        run: |
+          brew install xcodegen 2>/dev/null || brew upgrade xcodegen
+          xcodegen --version
+
+      # 4. Устанавливаем xcpretty для красивого вывода
+      - name: 📦  Install xcpretty
+        run: gem install xcpretty --no-document -q
+
+      # 5. Генерируем Xcode проект из project.yml
+      - name: ⚙️  Generate Xcode project
+        working-directory: ios-app
+        run: |
+          xcodegen generate --spec project.yml
+          echo "=== Generated project files ==="
+          ls -la
+
+      # 6. Показываем доступные схемы
+      - name: 📋  List schemes
+        working-directory: ios-app
+        run: xcodebuild -project GridAwake.xcodeproj -list
+
+      # 7. Собираем для реального устройства (без подписи)
+      - name: 🏗️  Build (unsigned, iphoneos SDK)
+        working-directory: ios-app
+        run: |
+          BUILD_DIR="${{ runner.temp }}/DerivedData"
+
+          set -o pipefail
+          xcodebuild \
+            -project GridAwake.xcodeproj \
+            -scheme GridAwake \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath "$BUILD_DIR" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            ENABLE_BITCODE=NO \
+            clean build \
+          | xcpretty --color
+
+          # Находим собранный .app
+          APP_PATH=$(find "$BUILD_DIR" \
+            -name "GridAwake.app" \
+            -not -path "*simulator*" \
+            | head -1)
+
+          echo "APP_PATH=$APP_PATH" >> "$GITHUB_ENV"
+          echo "✅ Built: $APP_PATH"
+          ls -lh "$APP_PATH"
+
+      # 8. Пакуем .app → .ipa
+      - name: 📦  Package as IPA
+        run: |
+          PAYLOAD_DIR="${{ runner.temp }}/Payload"
+          IPA_PATH="${{ runner.temp }}/GridAwake.ipa"
+
+          mkdir -p "$PAYLOAD_DIR"
+          cp -r "$APP_PATH" "$PAYLOAD_DIR/GridAwake.app"
+
+          cd "${{ runner.temp }}"
+          zip -qr "GridAwake.ipa" "Payload"
+
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+          echo "✅ IPA created"
+          ls -lh "$IPA_PATH"
+
+      # 9. Загружаем .ipa как артефакт (хранится 30 дней)
+      - name: ⬆️  Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GridAwake-iOS-build-${{ github.run_number }}
+          path: ${{ runner.temp }}/GridAwake.ipa
+          retention-days: 30
+          if-no-files-found: error
+
+      # 10. Итоговая информация
+      - name: ✅  Build summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "  GridAwake iOS — Build complete!"
+          echo "  File: GridAwake.ipa"
+          echo "  Size: $(du -sh '${{ runner.temp }}/GridAwake.ipa' | cut -f1)"
+          echo ""
+          echo "  Установка на iPhone:"
+          echo "  → Скачайте IPA из Artifacts"
+          echo "  → Используйте Sideloadly (Windows)"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -1,0 +1,7 @@
+flask>=3.0.0
+qrcode[pil]>=7.4.2
+Pillow>=10.3.0
+pystray>=0.19.5
+pycaw>=20240210
+comtypes>=1.4.1
+pyinstaller>=6.6.0
