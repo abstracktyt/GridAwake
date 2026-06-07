@@ -1,5 +1,5 @@
 param()
-$ErrorActionPreference = "Stop"
+# Note: do NOT set ErrorActionPreference=Stop — git returns non-zero on many normal operations
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 
 Write-Host ""
@@ -87,7 +87,10 @@ if ($LASTEXITCODE -ne 0) {
 # Remote
 Write-Host ""
 Write-Host "  [4/5] Connecting to GitHub..." -ForegroundColor Yellow
-& git remote remove origin 2>$null
+$existingRemotes = & git remote 2>&1
+if ($existingRemotes -contains "origin") {
+    & git remote remove origin 2>&1 | Out-Null
+}
 & git remote add origin $RepoURL
 & git branch -M main
 Write-Host "  OK" -ForegroundColor Green
