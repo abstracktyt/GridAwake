@@ -35,3 +35,5 @@ ehthumbs.db
 # Test files
 pc-agent/test_check.py
 pc-agent/__pycache__/
+pc-agent/_internal/
+_internal/

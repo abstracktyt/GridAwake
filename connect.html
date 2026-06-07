@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GridAwake Connection Redirect</title>
+    <style>
+        body {
+            background-color: #12131a;
+            color: #e0e4ff;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background: #1c1e2d;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid #333355;
+        }
+        h1 {
+            color: #4a9eff;
+            margin-bottom: 10px;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        p {
+            color: #7070a0;
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #4a9eff;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover {
+            background: #2277cc;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GridAwake</h1>
+        <p>Перенаправлення до додатка...</p>
+        <p>Якщо додаток не відкрився автоматично, натисніть кнопку нижче:</p>
+        <a id="redirect-btn" class="btn" href="#">Відкрити в GridAwake</a>
+    </div>
+
+    <script>
+        // Get query string from current URL and build custom scheme URL
+        const queryString = window.location.search;
+        const appUrl = "gridawake://connect" + queryString;
+        
+        // Set href on button
+        document.getElementById("redirect-btn").href = appUrl;
+        
+        // Auto-redirect immediately
+        window.location.href = appUrl;
+        
+        // Fallback auto-redirect after 500ms
+        setTimeout(() => {
+            window.location.href = appUrl;
+        }, 500);
+    </script>
+</body>
+</html>

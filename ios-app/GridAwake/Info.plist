@@ -69,5 +69,18 @@
         <key>UIImageRespectsSafeAreaInsets</key>
         <true/>
     </dict>
+
+    <!-- Custom URL Scheme for Deep Linking -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.abstrackt.GridAwake</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>gridawake</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

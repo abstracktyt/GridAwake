@@ -41,9 +41,25 @@ def build_connection_payload(config: dict) -> dict:
     }
 
 
+import urllib.parse
+
 def generate_qr_png(config: dict) -> bytes:
     """Return raw PNG bytes of the QR-code for the connection payload."""
-    payload = json.dumps(build_connection_payload(config))
+    name = config.get("computer_name", socket.gethostname())
+    ip = get_local_ip()
+    port = config.get("port", 7070)
+    mac = get_mac_address()
+    secret = config.get("secret", "")
+    
+    # URL encode parameters to build gridawake://connect?name=...
+    params = urllib.parse.urlencode({
+        "name": name,
+        "ip": ip,
+        "port": port,
+        "mac": mac,
+        "secret": secret
+    })
+    payload = f"https://abstracktyt.github.io/GridAwake/connect.html?{params}"
 
     qr = qrcode.QRCode(
         version=None,

@@ -1,5 +1,4 @@
 import SwiftUI
-import AVFoundation
 
 // MARK: - AddComputerView
 
@@ -9,19 +8,15 @@ struct AddComputerView: View {
 
     var onAdd: (Computer) -> Void
 
-    @State private var mode: AddMode = .manual
     @State private var name:    String = ""
     @State private var ip:      String = ""
     @State private var port:    String = "7070"
     @State private var mac:     String = ""
     @State private var secret:  String = ""
-    @State private var showQR   = false
     @State private var errorMsg: String? = nil
 
     private var theme: AppTheme { appState.currentTheme }
     private var isDark: Bool    { theme.mode == .dark }
-
-    enum AddMode { case manual, qr }
 
     var body: some View {
         NavigationView {
@@ -31,20 +26,8 @@ struct AddComputerView: View {
 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Mode picker
-                        Picker("", selection: $mode) {
-                            Text(L10n.t("manual_setup")).tag(AddMode.manual)
-                            Text(L10n.t("scan_qr")).tag(AddMode.qr)
-                        }
-                        .pickerStyle(.segmented)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 12)
-
-                        if mode == .manual {
-                            manualForm
-                        } else {
-                            qrSection
-                        }
+                        manualForm
+                            .padding(.top, 12)
                     }
                 }
             }
@@ -54,12 +37,10 @@ struct AddComputerView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(L10n.t("cancel_btn")) { dismiss() }
                 }
-                if mode == .manual {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(L10n.t("save")) { save() }
-                            .fontWeight(.semibold)
-                            .foregroundColor(theme.accentColor)
-                    }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(L10n.t("save")) { save() }
+                        .fontWeight(.semibold)
+                        .foregroundColor(theme.accentColor)
                 }
             }
         }
@@ -134,42 +115,6 @@ struct AddComputerView: View {
         .padding(.horizontal, 16)
     }
 
-    // MARK: - QR section
-
-    var qrSection: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "qrcode.viewfinder")
-                .font(.system(size: 80))
-                .foregroundColor(theme.accentColor.opacity(0.6))
-                .padding(.top, 20)
-
-            Text("Запустіть GridAwake Agent на ПК,\nвідкрийте Налаштування і покажіть QR код")
-                .font(.system(size: 15))
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 30)
-
-            Button {
-                showQR = true
-            } label: {
-                Label(L10n.t("scan_qr"), systemImage: "camera.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(theme.gradient)
-                    .cornerRadius(16)
-            }
-            .padding(.horizontal, 16)
-        }
-        .sheet(isPresented: $showQR) {
-            QRScannerView { result in
-                showQR = false
-                handleQR(result)
-            }
-        }
-    }
-
     // MARK: - Logic
 
     func save() {
@@ -181,23 +126,5 @@ struct AddComputerView: View {
         let computer = Computer(name: name, ip: ip, port: p,
                                 mac: mac, secret: secret)
         onAdd(computer)
-    }
-
-    func handleQR(_ payload: String) {
-        guard let data = payload.data(using: .utf8),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              json["app"] as? String == "gridawake"
-        else {
-            errorMsg = "Невірний QR код"
-            mode = .manual
-            return
-        }
-
-        name   = json["name"]   as? String ?? "PC"
-        ip     = json["ip"]     as? String ?? ""
-        port   = String(json["port"] as? Int ?? 7070)
-        mac    = json["mac"]    as? String ?? ""
-        secret = json["secret"] as? String ?? ""
-        mode   = .manual
     }
 }

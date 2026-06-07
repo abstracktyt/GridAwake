@@ -81,8 +81,19 @@ struct MainView: View {
     // MARK: ─── Top Bar ──────────────────────────────────────────────────────
 
     var topBar: some View {
-        HStack {
+        HStack(spacing: 10) {
+            Image("AppLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 38, height: 38)
+                .cornerRadius(10)
+                .shadow(color: theme.accentColor.opacity(isDark ? 0.3 : 0.1), radius: 4)
+            Text("GridAwake")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(isDark ? .white : .primary)
+            
             Spacer()
+            
             Button { withAnimation(.spring(response: 0.3)) { showMenu.toggle() } } label: {
                 ZStack {
                     Circle()
@@ -341,9 +352,12 @@ struct MainView: View {
 
     var emptyState: some View {
         VStack(spacing: 18) {
-            Image(systemName: "desktopcomputer.trianglebadge.exclamationmark")
-                .font(.system(size: 54))
-                .foregroundStyle(theme.accentColor.opacity(0.45))
+            Image("AppLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
+                .cornerRadius(18)
+                .shadow(color: theme.accentColor.opacity(0.25), radius: 8)
             Text(L10n.t("no_computers"))
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(isDark ? .white : .primary)

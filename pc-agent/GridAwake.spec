@@ -10,7 +10,7 @@ a = Analysis(
     ["main.py"],
     pathex=["."],
     binaries=[],
-    datas=[],
+    datas=[("logo.png", ".")],
     hiddenimports=[
         "pycaw",
         "pycaw.pycaw",
@@ -54,7 +54,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    # icon="assets/icon.ico",  # Uncomment if you have an .ico file
+    icon="logo.ico",
 )
 
 coll = COLLECT(
