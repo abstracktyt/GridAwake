@@ -65,6 +65,9 @@
     </dict>
 
     <key>UILaunchScreen</key>
-    <dict/>
+    <dict>
+        <key>UIImageRespectsSafeAreaInsets</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

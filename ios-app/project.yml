@@ -32,6 +32,9 @@ targets:
     # Используем наш существующий Info.plist
     info:
       path: GridAwake/Info.plist
+      properties:
+        UILaunchScreen:
+          UIImageRespectsSafeAreaInsets: true
 
     # Build settings
     settings:
